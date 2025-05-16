@@ -1,0 +1,45 @@
+package com.playtodoo.modulith.users.presentation;
+
+import com.playtodoo.modulith.users.application.UserService;
+import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserHandler;
+import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserRequest;
+import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserResponse;
+import com.playtodoo.modulith.users.validation.CreateUserDTO;
+import com.playtodoo.modulith.users.validation.UserDto;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService service;
+    private final AuthenticateUserHandler authenticateUserHandler;
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticateUserResponse> authenticate(@RequestBody AuthenticateUserRequest request) {
+        return ResponseEntity.ok(authenticateUserHandler.authenticateUser(request));
+    }
+
+    @PostMapping("/register")
+    public UserDto createUser(@RequestBody @Valid CreateUserDTO dto) {
+        return service.createUser(dto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable UUID id) {
+        return service.getUserById(id);
+    }
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
+    @PostMapping("/{userId}/roles")
+    public UserDto assignRole(@PathVariable UUID userId, @RequestParam String role) {
+        return service.assignRoleToUser(userId, role);
+    }
+}
