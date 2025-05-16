@@ -24,7 +24,7 @@ COPY --from=build /app/target/*.jar app.jar
 ENV JAVA_OPTS="-Xms256m -Xmx512m"
 
 # Puerto expuesto por tu aplicación Spring Boot
-EXPOSE 8080
+EXPOSE 8081
 
 # Comando de arranque
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
