@@ -11,4 +11,5 @@ jobs:
     steps:
       - name: Trigger Coolify Deployment
         run: |
-          curl -X POST http://31.97.12.29:8000/api/v1/deploy?uuid=ecwc0sgs0g8wkws8owgkswcg&force=false
+          curl -X POST "http://31.97.12.29:8000/api/v1/deploy?uuid=ecwc0sgs0g8wkws8owgkswcg&force=false" \
+          -H "Authorization: Bearer ${{ secrets.COOLIFY_DEPLOY_TOKEN }}"
