@@ -1,6 +1,7 @@
 package com.playtodoo.modulith.sportcomplex.presentation;
 
 import com.playtodoo.modulith.sportcomplex.application.SportComplexService;
+import com.playtodoo.modulith.sportcomplex.exception.ApiErrorResponse;
 import com.playtodoo.modulith.sportcomplex.validation.LandingPageComplexDto;
 import com.playtodoo.modulith.sportcomplex.validation.SportComplexDto;
 import com.playtodoo.modulith.sportcomplex.validation.CreateSportComplexDto;
@@ -159,12 +160,28 @@ public class SportComplexController {
                             )
                     ),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "Error de validación en la solicitud",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiErrorResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
-                            description = "Complejo no encontrado"
+                            description = "Complejo no encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiErrorResponse.class)
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "500",
-                            description = "Error interno del servidor"
+                            description = "Error interno del servidor",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiErrorResponse.class)
+                            )
                     )
             }
     )

@@ -1,5 +1,6 @@
 package com.playtodoo.modulith.sportcomplex.exception;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = "com.playtodoo.modulith.sportcomplex")
+@Hidden
 public class SportComplexExceptionHandler {
 
     private final MessageSource messageSource;

@@ -1,5 +1,6 @@
 package com.playtodoo.modulith.users.exception;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = "com.playtodoo.modulith.users")
+@Hidden
 public class UserExceptionHandler {
 
     private final MessageSource messageSource;
