@@ -1,32 +1,24 @@
-package com.playtodoo.modulith.customers.exception;
+package com.playtodoo.modulith.sportcomplex.exception;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@ControllerAdvice(basePackages = "com.playtodoo.modulith.customers")
-public class CustomerExceptionHandler {
+@ControllerAdvice(basePackages = "com.playtodoo.modulith.sportcomplex")
+public class SportComplexExceptionHandler {
 
     private final MessageSource messageSource;
 
-    public CustomerExceptionHandler(MessageSource messageSource) {
+    public SportComplexExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
-    }
-
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleCustomerNotFound(
-            CustomerNotFoundException ex, WebRequest request) {
-
-        String localizedMessage = getMessage("error.customer.notfound", ex.getMessage());
-        return buildErrorResponse(localizedMessage, HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -32,11 +32,12 @@ public class UserController {
         return service.createUser(dto);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
     public UserDto getUserById(@PathVariable UUID id) {
         return service.getUserById(id);
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
     @PostMapping("/{userId}/roles")
     public UserDto assignRole(@PathVariable UUID userId, @RequestParam String role) {

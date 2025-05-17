@@ -4,7 +4,6 @@ import com.playtodoo.modulith.users.domain.Role;
 import com.playtodoo.modulith.users.domain.User;
 import com.playtodoo.modulith.users.exception.RoleNotFoundException;
 import com.playtodoo.modulith.users.exception.UserNotFoundException;
-import com.playtodoo.modulith.users.infrastructure.JwtService;
 import com.playtodoo.modulith.users.infrastructure.RoleRepository;
 import com.playtodoo.modulith.users.infrastructure.UserRepository;
 import com.playtodoo.modulith.users.mapper.UserMapper;
@@ -12,6 +11,7 @@ import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -33,8 +35,12 @@ public class UserServiceImpl implements UserService {
 
         Set<Role> userRoles = dto.roles().stream()
                 .map(roleName -> roleRepository.findByName(roleName)
-                        .orElseThrow(() -> new RoleNotFoundException("Role not found: " + roleName)))
+                        .orElseThrow(() -> {
+                            log.info("Role {} not found", roleName);
+                            return new RoleNotFoundException(roleName);
+                        }))
                 .collect(Collectors.toSet());
+
 
         User user = mapper.toUserByCreateUserDto(dto);
         user.setRoles(userRoles);
@@ -52,10 +58,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto assignRoleToUser(UUID userId, String roleName) {
         User user = repository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
 
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException("Role not found: " + roleName));
+                .orElseThrow(() -> new RoleNotFoundException(roleName));
 
         user.getRoles().add(role);
         return mapper.toUserDto(repository.save(user));

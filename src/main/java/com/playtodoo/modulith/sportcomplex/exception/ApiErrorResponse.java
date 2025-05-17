@@ -1,6 +1,5 @@
-package com.playtodoo.modulith.customers.exception;
+package com.playtodoo.modulith.sportcomplex.exception;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
