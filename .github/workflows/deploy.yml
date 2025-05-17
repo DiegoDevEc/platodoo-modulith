@@ -1,4 +1,4 @@
-name: Deploy to Coolify
+name: CI/CD Pipeline - Playtodoo
 
 on:
   push:
@@ -6,8 +6,34 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-test-coverage:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build, Test & Verify Coverage (80% Minimum)
+        run: mvn clean verify
+
+      - name: Upload JaCoCo Report (Optional - for GitHub Pages)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+
+  deploy:
+    needs: build-test-coverage
+    runs-on: ubuntu-latest
+    if: success()
+
     steps:
       - name: Trigger Coolify Deployment
         run: |
