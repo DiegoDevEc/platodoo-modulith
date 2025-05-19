@@ -1,6 +1,7 @@
 package com.playtodoo.modulith.users.presentation;
 
 import com.playtodoo.modulith.users.application.UserService;
+import com.playtodoo.modulith.users.application.authenticateUser.AccessTokenRequest;
 import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserHandler;
 import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserRequest;
 import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserResponse;
@@ -32,6 +33,9 @@ public class AuthenticationController {
         return service.createUser(dto);
     }
 
-
+    @PostMapping("/sign-in-with-token")
+    public ResponseEntity<AuthenticateUserResponse> authenticateWithToken(@RequestBody AccessTokenRequest request) {
+        return ResponseEntity.ok(authenticateUserHandler.authenticateFromAccessToken(request));
+    }
 
 }
