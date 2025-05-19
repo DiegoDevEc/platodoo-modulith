@@ -36,6 +36,13 @@ public class AuthenticateUserHandler{
 
         String jwtToken = jwtService.generateToken(user);
 
-        return new AuthenticateUserResponse(jwtToken);
+        UserAuthResponse userAuthResponse = new UserAuthResponse(
+                user.getId().toString(),
+                user.getEmail(),
+                user.getUsername(),
+                "",
+                user.getStatus()
+        );
+        return new AuthenticateUserResponse(jwtToken, userAuthResponse);
     }
 }
