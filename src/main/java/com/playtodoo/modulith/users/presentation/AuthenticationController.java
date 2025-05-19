@@ -9,28 +9,29 @@ import com.playtodoo.modulith.users.validation.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthenticationController {
 
     private final UserService service;
     private final AuthenticateUserHandler authenticateUserHandler;
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
-    public UserDto getUserById(@PathVariable UUID id) {
-        return service.getUserById(id);
+    @PostMapping("/sign-in")
+    public ResponseEntity<AuthenticateUserResponse> authenticate(@RequestBody AuthenticateUserRequest request) {
+        return ResponseEntity.ok(authenticateUserHandler.authenticateUser(request));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
-    @PostMapping("/{userId}/roles")
-    public UserDto assignRole(@PathVariable UUID userId, @RequestParam String role) {
-        return service.assignRoleToUser(userId, role);
+    @PostMapping("/sign-up")
+    public UserDto createUser(@RequestBody @Valid CreateUserDTO dto) {
+        return service.createUser(dto);
     }
+
+
+
 }
