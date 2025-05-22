@@ -36,6 +36,13 @@ public class UserExceptionHandler {
         return buildErrorResponse(localizedMessage, HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(TechnicalErrorException.class)
+    public ResponseEntity<ApiErrorResponse> handleTechnicalError(
+            TechnicalErrorException ex, WebRequest request) {
+        String localizedMessage = getMessage(ex.getMessage());
+        return buildErrorResponse(localizedMessage, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
     @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleRoleNotFound(
             RoleNotFoundException ex, WebRequest request) {

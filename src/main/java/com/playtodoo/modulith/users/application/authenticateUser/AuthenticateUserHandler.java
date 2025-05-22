@@ -86,7 +86,7 @@ public class AuthenticateUserHandler{
         }
         String userData = userEmail + "|" + platform;
 
-        User user = userRepository.findByEmailUsernamePhone(userData)
+        User user = userRepository.findByEmailUsernamePhoneAndPlatform(userEmail, platform)
                 .orElseThrow(() -> new UserNotFoundException(userData));
 
         boolean isTokenValid = jwtService.isTokenValid(token, user);

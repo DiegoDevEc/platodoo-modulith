@@ -2,13 +2,17 @@ package com.playtodoo.modulith.users.application;
 
 import com.playtodoo.modulith.users.domain.Role;
 import com.playtodoo.modulith.users.domain.User;
+import com.playtodoo.modulith.users.domain.UserPasswordOld;
 import com.playtodoo.modulith.users.exception.RoleNotFoundException;
+import com.playtodoo.modulith.users.exception.TechnicalErrorException;
 import com.playtodoo.modulith.users.exception.UserNotFoundException;
 import com.playtodoo.modulith.users.infrastructure.RoleRepository;
+import com.playtodoo.modulith.users.infrastructure.UserPasswordRepository;
 import com.playtodoo.modulith.users.infrastructure.UserRepository;
 import com.playtodoo.modulith.users.mapper.UserMapper;
 import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
+import com.playtodoo.modulith.users.validation.UserPasswordUpdateRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final UserPasswordRepository userPasswordRepository;
     private final RoleRepository roleRepository;
     private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
@@ -95,6 +100,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean existsUsername(String username, UUID userId, String platform) {
         return existsValue(username, userId, platform);
+    }
+
+    @Override
+    public Boolean updatePassword(UserPasswordUpdateRequest request) {
+
+        User user = repository.findById(request.userId())
+                .orElseThrow(() -> new UserNotFoundException(request.userId().toString()));
+
+        if(request.oldPassword().equals(request.newPassword())){
+            throw new TechnicalErrorException("error.password.match.old.new");
+        }
+
+        if (passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(request.newPassword()));
+            repository.save(user);
+            userPasswordRepository.save(UserPasswordOld.builder()
+                            .oldPassword(user.getPassword())
+                            .user(user)
+                    .build());
+            return true;
+        }else{
+            throw  new TechnicalErrorException("error.password.match");
+        }
     }
 
     private Boolean existsValue(String value, UUID userId, String platform) {

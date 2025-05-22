@@ -4,6 +4,7 @@ import com.playtodoo.modulith.users.application.UserService;
 import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserHandler;
 import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
+import com.playtodoo.modulith.users.validation.UserPasswordUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,9 @@ public class UserController {
     @PutMapping("/{id}")
     public UserDto update(@PathVariable UUID id, @RequestBody CreateUserDTO createUserDTO) {
         return service.updateUser(id, createUserDTO);
+    }
+    @PutMapping("/update-password")
+    public Boolean updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        return service.updatePassword(userPasswordUpdateRequest);
     }
 }
