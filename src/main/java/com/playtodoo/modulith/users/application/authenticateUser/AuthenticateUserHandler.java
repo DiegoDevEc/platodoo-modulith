@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,8 +41,16 @@ public class AuthenticateUserHandler{
             throw new UserNotFoundException(request.email());
         }
 
-        User user = userRepository.findByEmailUsernamePhone(request.email())
-                .orElseThrow(() -> new UserNotFoundException(request.email()));
+        String[] parts = request.email().split("\\|");
+        if (parts.length != 2) {
+            throw new UsernameNotFoundException("Formato esperado: usuario|PLATAFORMA");
+        }
+
+        String username = parts[0];
+        String platform = parts[1];
+
+        User user = userRepository.findByEmailUsernamePhoneAndPlatform(username, platform)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
 
         String jwtToken = jwtService.generateToken(user);
@@ -61,10 +70,11 @@ public class AuthenticateUserHandler{
         String newToken;
 
         String userEmail;
+        String platform;
         try {
-
             Claims claims = jwtService.extractAllClaims(token);
             userEmail = claims.get("email", String.class);
+            platform = claims.get("platform", String.class);
         } catch (JwtException e) {
             log.error("Failed to extract username from JWT", e);
             throw new TokenNotValidException("Malformed JWT token");
@@ -74,9 +84,10 @@ public class AuthenticateUserHandler{
             log.debug("The JWT doesn't contain a username");
             throw new TokenNotValidException("Token does not contain a valid username");
         }
+        String userData = userEmail + "|" + platform;
 
-        User user = userRepository.findByEmailUsernamePhone(userEmail)
-                .orElseThrow(() -> new UserNotFoundException(userEmail));
+        User user = userRepository.findByEmailUsernamePhone(userData)
+                .orElseThrow(() -> new UserNotFoundException(userData));
 
         boolean isTokenValid = jwtService.isTokenValid(token, user);
         boolean isTokenExpired = jwtService.isTokenExpired(token);

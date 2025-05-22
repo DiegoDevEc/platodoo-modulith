@@ -1,7 +1,9 @@
 package com.playtodoo.modulith.users.infrastructure.filter;
 
+import com.playtodoo.modulith.users.exception.TokenNotValidException;
 import com.playtodoo.modulith.users.infrastructure.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -47,6 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        final String platform;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -57,7 +60,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             jwt = authHeader.substring(7);
 
-            userEmail = jwtService.extractUsername(jwt);
+
+
+            try {
+                Claims claims = jwtService.extractAllClaims(jwt);
+                userEmail = claims.get("email", String.class);
+                platform = claims.get("platform", String.class);
+            } catch (JwtException e) {
+                log.error("Failed to extract username from JWT", e);
+                throw new TokenNotValidException("Malformed JWT token");
+            }
+
 
             if (userEmail == null || SecurityContextHolder.getContext().getAuthentication() != null) {
                 log.debug("The JWT doesn't contains a username");
@@ -65,7 +78,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            String userData = userEmail + "|" + platform;
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userData);
 
             boolean isTokenValid = jwtService.isTokenValid(jwt, userDetails);
             boolean isTokenExpired = jwtService.isTokenExpired(jwt);

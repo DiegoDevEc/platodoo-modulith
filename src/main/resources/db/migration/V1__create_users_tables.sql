@@ -13,13 +13,19 @@ CREATE TABLE users_person (
 
 CREATE TABLE users_user (
     id UUID PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    phone VARCHAR(50) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
+    platform VARCHAR(20) NOT NULL DEFAULT 'BACKOFFICE',
     status VARCHAR(3) NOT NULL DEFAULT 'ACT',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_users_person FOREIGN KEY (id) REFERENCES users_person(id) ON DELETE CASCADE
+    CONSTRAINT fk_users_person FOREIGN KEY (id) REFERENCES users_person(id) ON DELETE CASCADE,
+
+    -- Restricciones compuestas
+    CONSTRAINT uq_users_platform_username UNIQUE (platform, username),
+    CONSTRAINT uq_users_platform_email UNIQUE (platform, email),
+    CONSTRAINT uq_users_platform_phone UNIQUE (platform, phone)
 );
 
 CREATE TABLE users_role (

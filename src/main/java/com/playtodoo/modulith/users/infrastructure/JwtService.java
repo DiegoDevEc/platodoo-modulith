@@ -49,6 +49,7 @@ public class JwtService {
             extraClaims.put("userId", user.getId());
             extraClaims.put("email", user.getEmail());
             extraClaims.put("phone", user.getPhone());
+            extraClaims.put("platform", user.getPlatform());
         }
 
         return Jwts

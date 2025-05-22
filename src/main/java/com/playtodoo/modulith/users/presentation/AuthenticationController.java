@@ -10,10 +10,9 @@ import com.playtodoo.modulith.users.validation.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth/")
@@ -37,5 +36,30 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticateUserResponse> authenticateWithToken(@RequestBody AccessTokenRequest request) {
         return ResponseEntity.ok(authenticateUserHandler.authenticateFromAccessToken(request));
     }
+
+    @GetMapping("/validate-existing-email")
+    public ResponseEntity<Boolean> validateEmail(@RequestParam String email,
+                                                 @RequestParam String platform,
+                                                 @RequestParam(required = false) UUID userId) {
+        boolean exists = service.existsEmail(email, userId, platform);
+        return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/validate-existing-username")
+    public ResponseEntity<Boolean> validateUsername(@RequestParam String username,
+                                                    @RequestParam String platform,
+                                                    @RequestParam(required = false) UUID userId) {
+        boolean exists = service.existsUsername(username, userId, platform);
+        return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/validate-existing-phone")
+    public ResponseEntity<Boolean> validatePhone(@RequestParam String phone,
+                                                 @RequestParam String platform,
+                                                 @RequestParam(required = false) UUID userId) {
+        boolean exists = service.existsPhone(phone, userId, platform);
+        return ResponseEntity.ok(exists);
+    }
+
 
 }

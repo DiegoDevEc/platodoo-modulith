@@ -21,8 +21,18 @@ public class AuthenticationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmailUsernamePhone(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return combined -> {
+            String[] parts = combined.split("\\|");
+            if (parts.length != 2) {
+                throw new UsernameNotFoundException("Formato esperado: usuario|PLATAFORMA");
+            }
+
+            String username = parts[0];
+            String platform = parts[1];
+
+            return userRepository.findByEmailUsernamePhoneAndPlatform(username, platform)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        };
     }
 
     @Bean

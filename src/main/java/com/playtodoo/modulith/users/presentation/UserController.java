@@ -2,13 +2,9 @@ package com.playtodoo.modulith.users.presentation;
 
 import com.playtodoo.modulith.users.application.UserService;
 import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserHandler;
-import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserRequest;
-import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserResponse;
 import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +28,10 @@ public class UserController {
     @PostMapping("/{userId}/roles")
     public UserDto assignRole(@PathVariable UUID userId, @RequestParam String role) {
         return service.assignRoleToUser(userId, role);
+    }
+
+    @PutMapping("/{id}")
+    public UserDto update(@PathVariable UUID id, @RequestBody CreateUserDTO createUserDTO) {
+        return service.updateUser(id, createUserDTO);
     }
 }

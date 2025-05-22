@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(CreateUserDTO dto) {
-
         Set<Role> userRoles = dto.roles().stream()
                 .map(roleName -> roleRepository.findByName(roleName)
                         .orElseThrow(() -> {
@@ -40,7 +39,6 @@ public class UserServiceImpl implements UserService {
                             return new RoleNotFoundException(roleName);
                         }))
                 .collect(Collectors.toSet());
-
 
         User user = mapper.toUserByCreateUserDto(dto);
         user.setRoles(userRoles);
@@ -65,5 +63,43 @@ public class UserServiceImpl implements UserService {
 
         user.getRoles().add(role);
         return mapper.toUserDto(repository.save(user));
+    }
+
+    @Override
+    public UserDto updateUser(UUID userId, CreateUserDTO dto) {
+        log.info("Updating user with ID: {}", userId);
+        User user = repository.findById(userId)
+                .orElseThrow(() -> {
+                    log.error("User with ID {} not found", userId);
+                   return new UserNotFoundException(userId.toString());
+                });
+
+        user.setFirstName(dto.firstName());
+        user.setLastName(dto.lastName());
+        user.setEmail(dto.email());
+        user.setPhone(dto.phone());
+
+        return mapper.toUserDto(repository.save(user));
+    }
+
+    @Override
+    public Boolean existsEmail(String email, UUID userId, String platform) {
+        return existsValue(email, userId, platform);
+    }
+
+    @Override
+    public Boolean existsPhone(String phone, UUID userId, String platform) {
+        return existsValue(phone, userId, platform);
+    }
+
+    @Override
+    public Boolean existsUsername(String username, UUID userId, String platform) {
+        return existsValue(username, userId, platform);
+    }
+
+    private Boolean existsValue(String value, UUID userId, String platform) {
+        return repository.findByEmailUsernamePhoneAndPlatform(value,platform)
+                .map(user -> userId != null && user.getId().equals(userId))
+                .orElse(true);
     }
 }

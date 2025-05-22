@@ -18,10 +18,10 @@ import java.util.*;
 @EntityListeners(AuditEntityListener.class)
 public class User extends Person implements UserDetails {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -29,6 +29,9 @@ public class User extends Person implements UserDetails {
 
     @Column(nullable = false)
     private String phone;
+
+    @Column(nullable = false)
+    private String platform;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

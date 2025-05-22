@@ -66,6 +66,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://backoffice.playtodoo.com");
         config.addAllowedOrigin("https://backoffice.playtodoo.com");
+        config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
