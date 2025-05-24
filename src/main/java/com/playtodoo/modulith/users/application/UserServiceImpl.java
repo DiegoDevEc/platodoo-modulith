@@ -1,5 +1,7 @@
 package com.playtodoo.modulith.users.application;
 
+import com.playtodoo.modulith.common.PageResponse;
+import com.playtodoo.modulith.sportcomplex.validation.SportComplexDto;
 import com.playtodoo.modulith.users.domain.Role;
 import com.playtodoo.modulith.users.domain.User;
 import com.playtodoo.modulith.users.domain.UserPasswordOld;
@@ -16,9 +18,11 @@ import com.playtodoo.modulith.users.validation.UserPasswordUpdateRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,6 +53,16 @@ public class UserServiceImpl implements UserService {
         user.setRoles(userRoles);
         user.setPassword(passwordEncoder.encode(dto.password()));
         return mapper.toUserDto(repository.save(user));
+    }
+
+    @Override
+    public PageResponse<UserDto> findAll(int page, int size, String sortField, String sortDirection) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
+        Page<User> pageResult = repository.findAll(pageable);
+        List<UserDto> dtos = pageResult.getContent().stream()
+                .map(mapper::toUserDto)
+                .toList();
+        return PageResponse.fromPage(new PageImpl<>(dtos, pageable, pageResult.getTotalElements()), sortField, sortDirection);
     }
 
     @Override
