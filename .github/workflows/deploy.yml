@@ -9,6 +9,9 @@ jobs:
   build-test-coverage:
     runs-on: ubuntu-latest
 
+    env:
+      SPRING_PROFILES_ACTIVE: test  # ✅ Usamos H2 para test
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

@@ -9,12 +9,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
+    show-sql: false
 
   flyway:
-    enabled: false  # Evitamos errores al no usar PostgreSQL en tests
+    enabled: false
 
 logging:
   level:
     root: WARN
-    com.playtodoo: DEBUG
