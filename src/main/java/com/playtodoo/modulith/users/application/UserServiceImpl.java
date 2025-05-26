@@ -1,7 +1,6 @@
 package com.playtodoo.modulith.users.application;
 
 import com.playtodoo.modulith.common.PageResponse;
-import com.playtodoo.modulith.sportcomplex.validation.SportComplexDto;
 import com.playtodoo.modulith.users.domain.Role;
 import com.playtodoo.modulith.users.domain.User;
 import com.playtodoo.modulith.users.domain.UserPasswordOld;
@@ -137,6 +136,14 @@ public class UserServiceImpl implements UserService {
         }else{
             throw  new TechnicalErrorException("error.password.match");
         }
+    }
+
+    @Override
+    public void delete(UUID id) {
+      User user =  repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
+      user.setStatus("INA");
+      repository.save(user);
     }
 
     private Boolean existsValue(String value, UUID userId, String platform) {

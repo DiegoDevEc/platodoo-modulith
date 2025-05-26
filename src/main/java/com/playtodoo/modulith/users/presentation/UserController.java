@@ -1,14 +1,11 @@
 package com.playtodoo.modulith.users.presentation;
 
 import com.playtodoo.modulith.common.PageResponse;
-import com.playtodoo.modulith.sportcomplex.validation.SportComplexDto;
 import com.playtodoo.modulith.users.application.UserService;
-import com.playtodoo.modulith.users.application.authenticateUser.AuthenticateUserHandler;
 import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
 import com.playtodoo.modulith.users.validation.UserPasswordUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,8 +46,15 @@ public class UserController {
     public UserDto update(@PathVariable UUID id, @RequestBody CreateUserDTO createUserDTO) {
         return service.updateUser(id, createUserDTO);
     }
+
     @PutMapping("/update-password")
     public Boolean updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         return service.updatePassword(userPasswordUpdateRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
