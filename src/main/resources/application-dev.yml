@@ -1,0 +1,28 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/playtodoo_db
+    username: postgres
+    password: system
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: DEBUG
+    com.playtodoo: DEBUG

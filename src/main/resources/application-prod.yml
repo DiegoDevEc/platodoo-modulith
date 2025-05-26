@@ -1,0 +1,28 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    url: jdbc:postgresql://ep-floral-base-a4bfswc8-pooler.us-east-1.aws.neon.tech/neondb
+    username: neondb_owner
+    password: npg_G0iDZ7HTreIb
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    com.playtodoo: DEBUG

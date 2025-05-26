@@ -27,4 +27,5 @@ ENV JAVA_OPTS="-Xms256m -Xmx512m"
 EXPOSE 8081
 
 # Comando de arranque
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar"]
+
