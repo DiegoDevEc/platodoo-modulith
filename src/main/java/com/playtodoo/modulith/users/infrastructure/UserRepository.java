@@ -26,8 +26,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
        OR LOWER(u.username) = LOWER(:value) 
        OR LOWER(u.phone) = LOWER(:value)) 
       AND u.platform = :platform
+      AND u.status = 'ACT'
     """)
     Optional<User> findByEmailUsernamePhoneAndPlatform(@Param("value") String value, @Param("platform") String platform);
+
     @Query("SELECT u FROM User u WHERE u.email = :value OR u.username = :value OR u.phone = :value")
     Optional<User> findByEmailUsernamePhone(@Param("value") String value);
 }

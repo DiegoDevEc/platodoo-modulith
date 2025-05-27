@@ -1,5 +1,6 @@
 package com.playtodoo.modulith.users.validation;
 
+import java.util.Set;
 import java.util.UUID;
 
 public record UserDto(
@@ -8,5 +9,9 @@ public record UserDto(
          String email,
          String phone,
          String firstName,
-         String lastName) {
+         String lastName,
+         String status,
+         String imageUrl,
+         String platform,
+         Set<String> roles) {
 }

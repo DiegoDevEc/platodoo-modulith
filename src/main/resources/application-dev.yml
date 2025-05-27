@@ -24,5 +24,7 @@ server:
 
 logging:
   level:
+    sun.rmi: WARN
+    javax.management.remote.rmi: WARN
     root: DEBUG
     com.playtodoo: DEBUG

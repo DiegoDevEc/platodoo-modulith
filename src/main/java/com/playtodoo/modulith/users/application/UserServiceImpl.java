@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
         User user = mapper.toUserByCreateUserDto(dto);
         user.setRoles(userRoles);
         user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setStatus("ACT");
         return mapper.toUserDto(repository.save(user));
     }
 
@@ -96,6 +97,13 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dto.lastName());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
+        user.setStatus(dto.status());
+
+        user.getRoles().clear();
+        user.getRoles().addAll(dto.roles().stream()
+                .map(roleName -> roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new RoleNotFoundException(roleName)))
+                .collect(Collectors.toSet()));
 
         return mapper.toUserDto(repository.save(user));
     }
