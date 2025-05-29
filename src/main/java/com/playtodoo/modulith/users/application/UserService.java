@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface UserService {
     UserDto createUser(CreateUserDTO dto);
-    PageResponse<UserDto> findAll(int page, int size, String sortField, String sortDirection);
+    PageResponse<UserDto> findAll(int page, int size, String sortField, String sortDirection, String search);
     UserDto getUserById(UUID id);
     UserDto assignRoleToUser(UUID userId, String roleName);
     UserDto updateUser(UUID id, CreateUserDTO dto);

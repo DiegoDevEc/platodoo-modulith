@@ -1,6 +1,7 @@
 package com.playtodoo.modulith.sportcomplex.application.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.playtodoo.modulith.common.PageResponse;
 import com.playtodoo.modulith.sportcomplex.application.SportComplexService;
 import com.playtodoo.modulith.sportcomplex.domain.SportComplex;
 import com.playtodoo.modulith.sportcomplex.exception.LandingPageNotFoundException;
@@ -10,14 +11,13 @@ import com.playtodoo.modulith.sportcomplex.mapper.SportComplexMapper;
 import com.playtodoo.modulith.sportcomplex.validation.CreateSportComplexDto;
 import com.playtodoo.modulith.sportcomplex.validation.LandingPageComplexDto;
 import com.playtodoo.modulith.sportcomplex.validation.SportComplexDto;
+import com.playtodoo.modulith.users.validation.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 @Service
 @Slf4j
@@ -29,17 +29,25 @@ public class SportComplexServiceImpl implements SportComplexService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Page<SportComplexDto> findAll(int page, int size, String sortBy, String direction) {
-        log.debug("Fetching SportComplex list - page: {}, size: {}, sortBy: {}, direction: {}", page, size, sortBy, direction);
+    public PageResponse<SportComplexDto> findAll(int page, int size, String sortField, String sortDirection) {
+        log.debug("Fetching SportComplex list - page: {}, size: {}, sortBy: {}, direction: {}", page, size, sortField, sortDirection);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
+        Page<SportComplex> pageResult = sportComplexRepository.findAll(pageable);
+        List<SportComplexDto> dtos = pageResult.getContent().stream()
+                .map(mapper::toSportComplexDto)
+                .toList();
+        return PageResponse.fromPage(new PageImpl<>(dtos, pageable, pageResult.getTotalElements()), sortField, sortDirection);
+    }
 
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<SportComplex> sportComplexes = sportComplexRepository.findAll(pageable);
-
-        return sportComplexes.map(mapper::toSportComplexDto);
+    @Override
+    public PageResponse<SportComplexDto> findAllByUserId(UUID userId, int page, int size, String sortField, String sortDirection) {
+        log.debug("Fetching SportComplex list for user {} - page: {}, size: {}, sortBy: {}, direction: {}", userId, page, size, sortField, sortDirection);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
+        Page<SportComplex> pageResult = sportComplexRepository.findAllByOwnerIdAndStatus(userId, "ACT", pageable);
+        List<SportComplexDto> dtos = pageResult.getContent().stream()
+                .map(mapper::toSportComplexDto)
+                .toList();
+        return PageResponse.fromPage(new PageImpl<>(dtos, pageable, pageResult.getTotalElements()), sortField, sortDirection);
     }
 
     @Override

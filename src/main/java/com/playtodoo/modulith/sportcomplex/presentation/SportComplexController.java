@@ -1,5 +1,6 @@
 package com.playtodoo.modulith.sportcomplex.presentation;
 
+import com.playtodoo.modulith.common.PageResponse;
 import com.playtodoo.modulith.sportcomplex.application.SportComplexService;
 import com.playtodoo.modulith.sportcomplex.exception.ApiErrorResponse;
 import com.playtodoo.modulith.sportcomplex.validation.LandingPageComplexDto;
@@ -39,7 +40,7 @@ public class SportComplexController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Page<SportComplexDto>> getAll(
+    public ResponseEntity<PageResponse<SportComplexDto>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "name") String sortBy,

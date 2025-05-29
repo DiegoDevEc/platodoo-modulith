@@ -32,4 +32,14 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.email = :value OR u.username = :value OR u.phone = :value")
     Optional<User> findByEmailUsernamePhone(@Param("value") String value);
+
+    @Query("""
+    SELECT u FROM User u 
+    WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))
+       OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
+       OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
+       OR LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))
+       OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :search, '%'))
+    """)
+    Page<User> searchUsers(@Param("search") String search, Pageable pageable);
 }

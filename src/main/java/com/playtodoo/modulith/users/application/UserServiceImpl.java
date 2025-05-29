@@ -56,12 +56,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResponse<UserDto> findAll(int page, int size, String sortField, String sortDirection) {
+    public PageResponse<UserDto> findAll(int page, int size, String sortField, String sortDirection, String search) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), sortField));
-        Page<User> pageResult = repository.findAll(pageable);
+        Page<User> pageResult;
+
+        if (search != null && !search.trim().isEmpty()) {
+            pageResult = repository.searchUsers(search, pageable);
+        } else {
+            pageResult = repository.findAll(pageable);
+        }
+
         List<UserDto> dtos = pageResult.getContent().stream()
                 .map(mapper::toUserDto)
                 .toList();
+
         return PageResponse.fromPage(new PageImpl<>(dtos, pageable, pageResult.getTotalElements()), sortField, sortDirection);
     }
 

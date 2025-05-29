@@ -25,31 +25,32 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "username") String sortField,
-            @RequestParam(defaultValue = "asc") String direction) {
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String search) {
 
-        return ResponseEntity.ok(service.findAll(page, size, sortField, direction));
+        return ResponseEntity.ok(service.findAll(page, size, sortField, direction, search));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
-    public UserDto getUserById(@PathVariable UUID id) {
-        return service.getUserById(id);
+    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.getUserById(id));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
     @PostMapping("/{userId}/roles")
-    public UserDto assignRole(@PathVariable UUID userId, @RequestParam String role) {
-        return service.assignRoleToUser(userId, role);
+    public ResponseEntity<UserDto> assignRole(@PathVariable UUID userId, @RequestParam String role) {
+        return ResponseEntity.ok(service.assignRoleToUser(userId, role));
     }
 
     @PutMapping("/{id}")
-    public UserDto update(@PathVariable UUID id, @RequestBody CreateUserDTO createUserDTO) {
-        return service.updateUser(id, createUserDTO);
+    public ResponseEntity<UserDto> update(@PathVariable UUID id, @RequestBody CreateUserDTO createUserDTO) {
+        return ResponseEntity.ok( service.updateUser(id, createUserDTO));
     }
 
     @PutMapping("/update-password")
-    public Boolean updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
-        return service.updatePassword(userPasswordUpdateRequest);
+    public ResponseEntity<Boolean> updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        return ResponseEntity.ok(service.updatePassword(userPasswordUpdateRequest)) ;
     }
 
     @DeleteMapping("/{id}")
