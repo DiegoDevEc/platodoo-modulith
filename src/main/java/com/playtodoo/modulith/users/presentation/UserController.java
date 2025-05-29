@@ -48,7 +48,7 @@ public class UserController {
         return ResponseEntity.ok( service.updateUser(id, createUserDTO));
     }
 
-    @PutMapping("/update-password")
+    @PatchMapping("/update-password")
     public ResponseEntity<Boolean> updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         return ResponseEntity.ok(service.updatePassword(userPasswordUpdateRequest)) ;
     }

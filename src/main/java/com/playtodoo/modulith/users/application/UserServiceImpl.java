@@ -105,13 +105,18 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dto.lastName());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
-        user.setStatus(dto.status());
 
-        user.getRoles().clear();
-        user.getRoles().addAll(dto.roles().stream()
-                .map(roleName -> roleRepository.findByName(roleName)
-                        .orElseThrow(() -> new RoleNotFoundException(roleName)))
-                .collect(Collectors.toSet()));
+        if(dto.status() != null) {
+            user.setStatus(dto.status());
+        }
+
+        if(dto.roles() != null) {
+            user.getRoles().clear();
+            user.getRoles().addAll(dto.roles().stream()
+                    .map(roleName -> roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new RoleNotFoundException(roleName)))
+                    .collect(Collectors.toSet()));
+        }
 
         return mapper.toUserDto(repository.save(user));
     }
