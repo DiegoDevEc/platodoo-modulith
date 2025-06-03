@@ -46,9 +46,10 @@ public class JwtService {
         if (userDetails instanceof User user) {
             Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
             extraClaims.put("roles", roles);
-            extraClaims.put("userId", user.getId());
             extraClaims.put("email", user.getEmail());
             extraClaims.put("phone", user.getPhone());
+            extraClaims.put("id", user.getId());
+            extraClaims.put("firstRegistry", user.getFirstRegistry());
             extraClaims.put("platform", user.getPlatform());
         }
 

@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -31,7 +32,25 @@ public class User extends Person implements UserDetails {
     private String phone;
 
     @Column(nullable = false)
-    private String platform;
+    private String platform; // BACKOFFICE, MANAGER, App ...
+
+    @Column(name = "provider")
+    private String provider; // PLATFORM, GOOGLE, FACEBOOK...
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
+
+    @Column(name = "phone_verified")
+    private Boolean phoneVerified;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "first_registry")
+    private Boolean firstRegistry;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

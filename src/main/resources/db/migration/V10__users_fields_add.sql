@@ -1,0 +1,2 @@
+ALTER TABLE users_user
+ADD COLUMN first_registry BOOLEAN DEFAULT FALSE;

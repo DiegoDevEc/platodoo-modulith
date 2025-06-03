@@ -21,6 +21,7 @@ import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(CreateUserDTO dto) {
+        String provider = dto.provider().toUpperCase();
+        Boolean emailVerify = !"PLATFORM".equalsIgnoreCase(provider) && !dto.email().isBlank();
+        Boolean phoneVerify = !"PLATFORM".equalsIgnoreCase(provider) && !dto.phone().isBlank();
+
         Set<Role> userRoles = dto.roles().stream()
                 .map(roleName -> roleRepository.findByName(roleName)
                         .orElseThrow(() -> {
@@ -51,6 +56,10 @@ public class UserServiceImpl implements UserService {
         User user = mapper.toUserByCreateUserDto(dto);
         user.setRoles(userRoles);
         user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setEmailVerified(emailVerify);
+        user.setPhoneVerified(phoneVerify);
+        user.setProvider(provider);
         user.setStatus("ACT");
         return mapper.toUserDto(repository.save(user));
     }

@@ -13,5 +13,7 @@ public record UserDto(
          String status,
          String imageUrl,
          String platform,
+         Boolean firstRegistry,
+         Boolean emailVerified,
          Set<String> roles) {
 }

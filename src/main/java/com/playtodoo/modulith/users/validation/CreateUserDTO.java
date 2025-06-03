@@ -14,6 +14,8 @@ public record CreateUserDTO(
         @Email String email,
         @NotBlank String phone,
         @NotBlank String platform,
+        @NotBlank String provider,
         @Size(min = 8, message = "Password must be at least 8 characters") String password,
-        Set<String> roles
+        Set<String> roles,
+        Boolean firstRegistry
 ) {}

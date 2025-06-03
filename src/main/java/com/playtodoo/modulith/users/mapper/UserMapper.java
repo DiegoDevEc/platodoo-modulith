@@ -24,6 +24,7 @@ public interface UserMapper {
     // DTO específico para crear usuario
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "firstRegistry", source = "firstRegistry")
     @Mapping(target = "roles", source = "roles", qualifiedByName = "mapRoles")
     User toUserByCreateUserDto(CreateUserDTO userDto);
 
