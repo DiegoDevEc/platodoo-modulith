@@ -59,4 +59,11 @@ public class SportComplexExceptionHandler {
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(code, args, locale);
     }
+
+    @ExceptionHandler(TypeComplexNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleTypeComplexNotFoundException(
+            TypeComplexNotFoundException ex, WebRequest request) {
+        String localizedMessage = getMessage("error.type.complex.not.found", ex.getMessage());
+        return buildErrorResponse(localizedMessage, HttpStatus.NOT_FOUND, request);
+    }
 }
