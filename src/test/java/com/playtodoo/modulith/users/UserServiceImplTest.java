@@ -1,11 +1,9 @@
 package com.playtodoo.modulith.users;
 
-import com.playtodoo.modulith.common.PageResponse;
 import com.playtodoo.modulith.users.application.UserServiceImpl;
 import com.playtodoo.modulith.users.domain.Role;
 import com.playtodoo.modulith.users.domain.User;
 import com.playtodoo.modulith.users.domain.UserPasswordOld;
-import com.playtodoo.modulith.users.exception.RoleNotFoundException;
 import com.playtodoo.modulith.users.exception.TechnicalErrorException;
 import com.playtodoo.modulith.users.exception.UserNotFoundException;
 import com.playtodoo.modulith.users.infrastructure.RoleRepository;
@@ -21,15 +19,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
