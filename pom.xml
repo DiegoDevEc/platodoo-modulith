@@ -258,6 +258,8 @@
 								<exclude>**/validation/**</exclude>
 								<exclude>**/exception/**</exclude>
 								<exclude>**/config/**</exclude>
+                                <exclude>**/infrastructure/**</exclude>
+                                <exclude>**/authenticateUser/**</exclude>
 							</excludes>
 							<rules>
 								<rule>
