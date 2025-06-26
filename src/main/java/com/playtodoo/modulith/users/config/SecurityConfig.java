@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/proxy/**",
+                                "/ws/**",
                                 "/actuator/**"
                         ).permitAll() // Solo estas rutas están libres
                         .requestMatchers("/api/customers/**").authenticated()
@@ -67,6 +68,8 @@ public class SecurityConfig {
         config.addAllowedOrigin("http://backoffice.playtodoo.com");
         config.addAllowedOrigin("https://backoffice.playtodoo.com");
         config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("http://localhost:5500");
+        config.addAllowedOrigin("http://127.0.0.1:5500");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

@@ -6,13 +6,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200") // Ajusta esto según donde se ejecute tu app Angular
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowedOriginPatterns("http://localhost:5500", "http://127.0.0.1:5500", "http://localhost:4200")
+                .allowedMethods("*")
+                .allowedHeaders("*");
+        // ⚠️ no pongas `.allowCredentials(true)` si usas `"*"`
     }
 }

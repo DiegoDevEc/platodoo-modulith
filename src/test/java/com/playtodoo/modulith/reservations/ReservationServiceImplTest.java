@@ -43,7 +43,8 @@ class ReservationServiceImplTest {
         Reservation reservation = new Reservation();
         when(mapper.toReservation(dto)).thenReturn(reservation);
         when(repository.save(reservation)).thenReturn(reservation);
-        ReservationDto expected = ReservationDto.builder().id(UUID.randomUUID()).build();
+        ReservationDto expected = new ReservationDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), null, null, null, null);
+
         when(mapper.toReservationDto(reservation)).thenReturn(expected);
 
         ReservationDto result = service.create(dto);
@@ -59,7 +60,8 @@ class ReservationServiceImplTest {
         Reservation reservation = new Reservation();
         when(repository.findById(id)).thenReturn(Optional.of(reservation));
         when(repository.save(reservation)).thenReturn(reservation);
-        ReservationDto expected = ReservationDto.builder().id(id).build();
+
+        ReservationDto expected = new ReservationDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), null, null, null, null);
         when(mapper.toReservationDto(reservation)).thenReturn(expected);
 
         ReservationDto result = service.update(id, dto);
@@ -83,7 +85,7 @@ class ReservationServiceImplTest {
         Reservation reservation = new Reservation();
         when(repository.findById(id)).thenReturn(Optional.of(reservation));
         when(repository.save(reservation)).thenReturn(reservation);
-        ReservationDto expected = ReservationDto.builder().id(id).build();
+        ReservationDto expected = new ReservationDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), null, null, null, null);
         when(mapper.toReservationDto(reservation)).thenReturn(expected);
 
         ReservationDto result = service.cancel(id);

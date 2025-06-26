@@ -5,6 +5,7 @@ import com.playtodoo.modulith.users.application.UserService;
 import com.playtodoo.modulith.users.validation.CreateUserDTO;
 import com.playtodoo.modulith.users.validation.UserDto;
 import com.playtodoo.modulith.users.validation.UserPasswordUpdateRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,8 +49,8 @@ public class UserController {
         return ResponseEntity.ok( service.updateUser(id, createUserDTO));
     }
 
-    @PatchMapping("/update-password")
-    public ResponseEntity<Boolean> updatePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+    @PutMapping("/update-password")
+    public ResponseEntity<Boolean> updatePassword(@Valid @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         return ResponseEntity.ok(service.updatePassword(userPasswordUpdateRequest)) ;
     }
 
