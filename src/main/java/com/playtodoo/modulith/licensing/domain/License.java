@@ -24,13 +24,15 @@ public class License {
     @Column(name = "sport_complex_id", nullable = false)
     private UUID sportComplexId;
 
-    @Column(nullable = false)
-    private String type; // FREE, BASIC, PREMIUM
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "type", referencedColumnName = "type")
+    private Plan plan;
 
-    @Column(nullable = false)
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
     @Column(nullable = false)
     private String status = "ACT";
 }
+
 
