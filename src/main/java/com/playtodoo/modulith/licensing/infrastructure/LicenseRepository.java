@@ -1,12 +1,11 @@
 package com.playtodoo.modulith.licensing.infrastructure;
 
-import com.playtodoo.modulith.licensing.domain.Plan;
+import com.playtodoo.modulith.licensing.domain.License;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface PlanRepository extends JpaRepository<Plan, UUID> {
-    java.util.Optional<Plan> findByType(String type);
+public interface LicenseRepository extends JpaRepository<License, UUID> {
 }
