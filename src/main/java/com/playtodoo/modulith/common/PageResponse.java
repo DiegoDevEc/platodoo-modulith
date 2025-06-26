@@ -1,6 +1,5 @@
 package com.playtodoo.modulith.common;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
